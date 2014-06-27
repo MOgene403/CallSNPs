@@ -1,0 +1,29 @@
+[OPTIONS]
+ManagerThreads	= 1
+BWAThreads	= 8
+
+[PATHS]
+bwa = /Installs/bwa
+samtools = /Installs/samtools
+
+[PIPELINE]
+#### No entries here. files will be aligned, converted to bam, sorted, and indexed.
+
+[GROUPS]
+##### This is expecting output from the Filtering script. Each Group name must be represented by at least two files:
+#### Group.R1.fastq
+#### Group.R2.fastq
+#### Group.orphan.fastq is optional
+#### The value in this pair is a comma-separated list of bwa index references contained in the References directory
+#### The reference value should be a unique identifier up to the first "."
+#RK352011 	= RK35HC.fasta,RK35LC.fasta
+RN317c91	= rn317HC.fasta,rn317LC.fasta
+#RN69SSIcP9G7	= SSIRN6GHC.fasta,SSIRN6GLC.fasta
+#Notch3c11	= notch3HC.fasta,notch3LC.fasta
+
+
+
+[DIRECTORIES]
+Data = /home/ec2-user/Store1/Final
+References = /home/ec2-user/Store1/References
+Output = /home/ec2-user/Store1/Analysis
