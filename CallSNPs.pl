@@ -69,9 +69,16 @@ sub workerThread{
 			warn $command."\n";
 			`$command`;
 			push @GarbageCollector, $baseOutput.".sam";
+			
 		}
 		collectTheGarbage(@GarbageCollector);
 	}
+}
+
+sub generateMeacham {
+}
+
+sub parseResult {
 }
 
 sub collectTheGarbage {
