@@ -77,8 +77,8 @@ sub workerThread{
 			warn $command."\n";
 			`$command`;
 			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate)};
-			generateMeacham($IndexPath,$baseOutput."mch.tab",\%H);
-			$command = "$mchScript $baseOutput.mch.tab $baseOutput.sam $baseOutput $mchScriptDir";
+			generateMeacham($IndexPath,$baseOutput.".mch.tab",\%H);
+			$command = "perl $mchScript $baseOutput.mch.tab $baseOutput.sam $baseOutput $mchScriptDir";
 			warn $command."\n";
 			`$command`;
 		}
@@ -115,8 +115,8 @@ sub parseResults {
 		my $chr=$line[0];
 		my $pos=$line[1];
 		my $refBase=$line[3];
-		next if $line[4] eq "X";
 		next if $line=~m/^\#/;
+		next if $line[4] eq "X";
 		next if $line =~m/INDEL/;
 		my @posAlt =split(/\,/,$line[4]);
 		my %I=%{parseInfo($line[7])};

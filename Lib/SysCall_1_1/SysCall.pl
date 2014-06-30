@@ -163,9 +163,9 @@ sub Check{
 		if (!(7==@arr)){
 			die "ERROR: file $pl_file is not in right format. There should be 7 elements in line space-seperated. \n";
 		}
-		if (!($arr[0] =~ /chr/)){
-			die "ERROR: file $pl_file is not in right format. first place should hold chr \n";
-		}
+#		if (!($arr[0] =~ /chr/)){
+#			die "ERROR: file $pl_file is not in right format. first place should hold chr \n";
+#		}
 		if ($arr[1] = /^(\d+)$/){
 			die "ERROR: file $pl_file is not in right format. expecting an integer in second column \n";
 		}
@@ -180,7 +180,7 @@ sub Check{
 
 	# tests the read file
 	print "checking read file is right format...\n";	
-	open (RF,"<$read_f") or die "can't open file $pl_file \n";
+	open (RF,"<",$read_f) or die "can't open file $pl_file : $!\n";
 	my $line;
 	for (my $i=0; $i<500;$i++){
 		if ($line=<RF>){
