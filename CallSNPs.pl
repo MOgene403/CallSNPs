@@ -98,7 +98,8 @@ sub workerThread{
 				my $K=$H{$key}{"Chr"}."-".$H{$key}{"Pos"};
 				if(defined($bad{$K})){
 				}else{
-					push @outFinal, parseToFinal($H{$key}{"L"});
+	#				push @outFinal, parseToFinal($H{$key}{"L"});
+					push @outFinal, $H{$key}{"L"};
 				}
 			}
 			Tools->printToFile($outFinal,\@outFinal);
