@@ -180,24 +180,25 @@ sub Check{
 
 	# tests the read file
 	print "checking read file is right format...\n";	
-	open (RF,"<",$read_f) or die "can't open file $pl_file : $!\n";
-	my $line;
-	for (my $i=0; $i<500;$i++){
-		if ($line=<RF>){
-			chomp($line);
-			
+	warn "ALTERED by hdp - skipping this check.\n";
+#	open (RF,"<",$read_f) or die "can't open file $pl_file : $!\n";
+#	my $line;
+#	for (my $i=0; $i<500;$i++){
+#		if ($line=<RF>){
+#			chomp($line);
+#			next if 
+#
+#			my @arr = split(/\t/, $line);
+#			if (!(11 < @arr)){
+#				die "ERROR: file $read_f not of right format. There should be at least 11 elements in tab-seperated line \nline: $line\n";
+#			}
+#			if ((!(($arr[2]=~/chr/)||($arr[2]=~/c(\d+|X|Y)\.fa/)))||(!($arr[3]=~/^(\d+)$/))){
+#				die "ERROR: file $read_f not of right format. Either place 2 is not chr or place 3 is not coordinate for line $line \n";
+#			}
+#		}
 
-			my @arr = split(/\t/, $line);
-			if (!(11 < @arr)){
-				die "ERROR: file $read_f not of right format. There should be at least 11 elements in tab-seperated line \nline: $line\n";
-			}
-			if ((!(($arr[2]=~/chr/)||($arr[2]=~/c(\d+|X|Y)\.fa/)))||(!($arr[3]=~/^(\d+)$/))){
-				die "ERROR: file $read_f not of right format. Either place 2 is not chr or place 3 is not coordinate for line $line \n";
-			}
-		}
-
-	}
-	close(RF);
+#	}
+#	close(RF);
 
 }
 

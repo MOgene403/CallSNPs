@@ -2,6 +2,7 @@
 ManagerThreads	= 1
 BWAThreads	= 8
 snpRate		= 0.001
+minCov		=500
 
 [PATHS]
 bwa = /Installs/bwa
@@ -18,11 +19,10 @@ bcftools = /Installs/samtools-0.1.19/bcftools/bcftools
 #### Group.orphan.fastq is optional
 #### The value in this pair is a comma-separated list of bwa index references contained in the References directory
 #### The reference value should be a unique identifier up to the first "."
-RK35C4 = RK35HC.fasta,RK35LC.fasta
-
-
+rk35c4 = RK35HC.fasta,RK35LC.fasta
 
 [DIRECTORIES]
-Data = /home/ec2-user/Store1/Data_Final
+#Data = /home/ec2-user/Store1/Test_Data
+Data = /home/ec2-user/Store1/Final_Data
 References = /home/ec2-user/Store1/References
 Output = /home/ec2-user/Store1/Analysis

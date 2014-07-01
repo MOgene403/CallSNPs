@@ -44,6 +44,7 @@ sub workerThread{
 		my $samtools	= $config->get("PATHS","samtools");
 		my $bcftools	= $config->get("PATHS","bcftools");
 		my $snpRate	= $config->get("OPTIONS","snpRate");
+		my $minCov	= $config->get("OPTIONS","minCov");
 		my @CurrentSourcePaths;
 		my @GarbageCollector;
 
@@ -72,18 +73,64 @@ sub workerThread{
 			warn $command."\n";
 			`$command`;
 			push @GarbageCollector, $baseOutput.".sam";
-#]$ /Installs/samtools mpileup -F 0.00001 -g -C50  -d 100000 -f /home/ec2-user/Store1/References/rn317HC.fasta RN317c91_vs_rn317HC.fasta.sorted.bam | /Installs/samtools-0.1.19/bcftools/bcftools view -b -m 0.01 -p .99 - | /Installs/samtools-0.1.19/bcftools/bcftools view - > var.raw.vcf
 			$command = "$samtools mpileup -F 0.00001 -g -C50 -d 10000000 -f $IndexPath $baseOutput.sorted.bam | $bcftools view -b -m 0.01 -p .99 - | $bcftools view - > $baseOutput.raw.vcf";
 			warn $command."\n";
 			`$command`;
-			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate)};
+			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate,$minCov)};
 			generateMeacham($IndexPath,$baseOutput.".mch.tab",\%H);
 			$command = "perl $mchScript $baseOutput.mch.tab $baseOutput.sam $baseOutput $mchScriptDir";
 			warn $command."\n";
 			`$command`;
+			push @GarbageCollector, $baseOutput.".mch.tab";
+			push @GarbageCollector, $baseOutput.".reads_parsed";
+			push @GarbageCollector, $baseOutput.".sys_errors.nn";
+			push @GarbageCollector, $baseOutput.".heterozygous.nn";
+			push @GarbageCollector, $baseOutput.".table_all";
+			push @GarbageCollector, $baseOutput.".table_chosen";
+			push @GarbageCollector, $baseOutput.".table_chosen.n";
+			push @GarbageCollector, $baseOutput.".table_chosen.nn";
+			push @GarbageCollector, $baseOutput.".filt.vcf";
+			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
+			my %bad=%{getSysErrors($baseOutput)};
+			my $outFinal = $baseOutput.".final.vcf";
+			my @outFinal;
+			foreach my $key (keys %H){
+				my $K=$H{$key}{"Chr"}."-".$H{$key}{"Pos"};
+				if(defined($bad{$K})){
+				}else{
+					push @outFinal, parseToFinal($H{$key}{"L"});
+				}
+			}
+			Tools->printToFile($outFinal,\@outFinal);
 		}
 		collectTheGarbage(@GarbageCollector);
 	}
+}
+
+sub parseToFinal {
+	my $line=shift;
+	my @line=split(/\t/,$line);
+	my $chr=$line[0];
+	my $pos=$line[1];
+	my $refBase=$line[3];
+	next if $line[4] eq "X";
+        my @posAlt =split(/\,/,$line[4]);
+	my %I=%{parseInfo($line[7])};
+			
+}
+
+sub getSysErrors {
+	my $file=shift;
+	my @file=@{Tools->LoadFile($file.".sys_errors")};
+	my $head=shift @file;
+	my %H;
+	foreach my $line (@file){
+		$line=~s/\s.+//;
+		my ($chr,$coord)=split(/\:/,$line);
+		my $k="$chr-$coord";
+		$H{$k}=1;
+	}
+	return \%H;
 }
 
 sub generateMeacham {
@@ -94,6 +141,7 @@ sub generateMeacham {
 	my %Fasta=%{Tools->LoadFasta($file)};
 	foreach my $pos (keys %H){
 		my $chr=$Fasta{$H{$pos}{"Chr"}};
+		next if $pos <3;
 		my $rpos=$pos-3;  ### -1 for coordinate correct, -2 for start of meacham.
 		my $seq=substr($chr,$rpos,5);
 		my @seq=split(//,$seq);
@@ -107,6 +155,7 @@ sub parseResults {
 	my $file=shift;
 	my $output=shift;
 	my $rate=shift;
+	my $minCov=shift;
 	my @file=@{Tools->LoadFile($file)};
 	my @out;
 	my %R;
@@ -138,19 +187,24 @@ sub parseResults {
 		$r{"DP"}=$I{"DP"};
 		$r{"I16"}=$I{"I16"};
 		$r{"QS"}=$I{"QS"};
-		if(checkInfo(\%r,$rate)){
+		$r{"L"}=$line;
+		if(checkInfo(\%r,$rate,$minCov)){
 			$R{$pos}=\%r;
 			push @out, $line;
 		}
 	}
-	Tools->printToFile($output,\@out);
+#	Tools->printToFile($output,\@out);
 	return \%R;
 }
 
 sub checkInfo {
 	my %r=%{$_[0]};
 	my $rate=$_[1];
+	my $minCov=$_[2];
 	my @I=split(/\,/,$r{"I16"});
+	if($r{"DP"}<$minCov){
+		return 0;
+	}
 	my $s=$I[2]+$I[3];
 	if (($s/$r{"DP"})>$rate){
 		return 1;
@@ -173,6 +227,7 @@ sub collectTheGarbage {
 	my @files = @_;
 	foreach my $file (@files){
 		my $command="rm -rf $file";
+		next unless -e $file;
 		warn $command."\n";
 		`$command`;
 	}

@@ -414,6 +414,7 @@ sub LoadFasta {
 	open(FILE,"<",$file) || die "cannot open $file!\n$!\nexiting...\n";
 	while(<FILE>){
 		chomp $_;
+		$_=~s/\r//;
 		if($_=~m/\>/){
 			$header=$_;
 			$header=~s/\>//;
