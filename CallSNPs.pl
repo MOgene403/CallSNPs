@@ -37,6 +37,7 @@ sub workerThread{
 	while(my $work=$q->dequeue_nb()){
 		my $grp		= $work;
 		my $DataDir 	= $config->get("DIRECTORIES","Data");
+		my $TempDir	= $config->get("DIRECTORIES","Temp");
 		my $OutDir  	= $config->get("DIRECTORIES","Output");
 		my $RefDir	= $config->get("DIRECTORIES","References");
 		my $workThreads = $config->get("OPTIONS","BWAThreads");
@@ -58,7 +59,8 @@ sub workerThread{
 		foreach my $index (@Indicies){
 			my $IndexPath=$RefDir."/".$index;
 			my $alias=$index;
-			my $baseOutput = $OutDir."/".$grp."_vs_".$alias;
+			my $baseOutput = $TempDir."/".$grp."_vs_".$alias;
+			my $finalOutput = $OutDir."/".$grp."_vs_".$alias;
 			$alias =~ s/\..+//;
 			my $command = "$bwa mem -t $workThreads $IndexPath $file1 $file2 > $baseOutput.sam";
 			warn $command."\n";
@@ -92,7 +94,8 @@ sub workerThread{
 			push @GarbageCollector, $baseOutput.".filt.vcf";
 			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
 			my %bad=%{getSysErrors($baseOutput)};
-			my $outFinal = $baseOutput.".final.vcf";
+#			my $tmpFinal = $baseOutput.".final.vcf";
+			my $outFinal = $finalOutput.".final.vcf";
 			my @outFinal;
 			foreach my $key (keys %H){
 				my $K=$H{$key}{"Chr"}."-".$H{$key}{"Pos"};
