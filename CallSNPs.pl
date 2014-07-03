@@ -95,17 +95,21 @@ sub workerThread{
 			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
 			my %bad=%{getSysErrors($baseOutput)};
 #			my $tmpFinal = $baseOutput.".final.vcf";
+			my $outBad   = $finalOutput.".filtered.vcf";			
 			my $outFinal = $finalOutput.".final.vcf";
 			my @outFinal;
+			my @outFiltered;
 			foreach my $key (keys %H){
 				my $K=$H{$key}{"Chr"}."-".$H{$key}{"Pos"};
 				if(defined($bad{$K})){
+					push @outFiltered, $H{$key}{"L"};
 				}else{
 	#				push @outFinal, parseToFinal($H{$key}{"L"});
 					push @outFinal, $H{$key}{"L"};
 				}
 			}
 			Tools->printToFile($outFinal,\@outFinal);
+			Tools->printToFile($outBad,\@outFiltered);
 		}
 		collectTheGarbage(@GarbageCollector);
 	}
