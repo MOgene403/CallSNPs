@@ -95,8 +95,8 @@ sub workerThread{
 			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
 			my %bad=%{getSysErrors($baseOutput)};
 #			my $tmpFinal = $baseOutput.".final.vcf";
-			my $outBad   = $finalOutput.".meacham.vcf";			
-			my $outFinal = $finalOutput.".final.vcf";
+			my $outBad   = $finalOutput.".sysErrors.vcf";			
+			my $outFinal = $finalOutput.".truePos.vcf";
 			my @outFinal;
 			my @outFiltered;
 			foreach my $key (keys %H){

@@ -26,3 +26,4 @@ rk35c4 = RK35HC.fasta,RK35LC.fasta
 Data = /home/ec2-user/Store1/Final_Data
 References = /home/ec2-user/Store1/References
 Output = /home/ec2-user/Store1/Analysis
+Temp = /home/ec2-user/Store1/Temp
