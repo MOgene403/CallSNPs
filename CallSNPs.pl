@@ -40,6 +40,7 @@ sub workerThread{
 		my $TempDir	= $config->get("DIRECTORIES","Temp");
 		my $OutDir  	= $config->get("DIRECTORIES","Output");
 		my $RefDir	= $config->get("DIRECTORIES","References");
+		checkDir($DataDir,$TempDir,$OutDir,$RefDir);
 		my $workThreads = $config->get("OPTIONS","BWAThreads");
 		my $bwa		= $config->get("PATHS","bwa");
 		my $samtools	= $config->get("PATHS","samtools");
@@ -156,6 +157,13 @@ sub generateMeacham {
 		push @output, $H{$pos}{"Chr"}." ".$pos." ".join(" ",@seq);
 	}
 	Tools->printToFile($out,\@output);
+	return 1;
+}
+
+sub checkDir {
+	foreach my $dir (@_){
+		die "Cannot find directory: $dir\n" unless -e $dir;
+	}
 	return 1;
 }
 
