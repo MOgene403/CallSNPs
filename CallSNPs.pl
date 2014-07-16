@@ -24,7 +24,7 @@ for(my $i=0;$i<=$#Groups;$i++){
 	$q->enqueue($Groups[$i]);
 }
 
-for(my$i=0;$i<=$threads;$i++){
+for(my$i=0;$i<$threads;$i++){
 	my $thr=threads->create(\&workerThread);
 }
 while(threads->list()>0){
@@ -210,11 +210,13 @@ sub checkInfo {
 	my $rate=$_[1];
 	my $minCov=$_[2];
 	my @I=split(/\,/,$r{"I16"});
+	my @QS=split(/\,/,$r{"QS"});
 	if($r{"DP"}<$minCov){
 		return 0;
 	}
 	my $s=$I[2]+$I[3];
-	if (($s/$r{"DP"})>$rate){
+#	if (($s/$r{"DP"})>$rate){
+	if ($QS[1]>=0.001){
 		return 1;
 	}
 	return 0;
