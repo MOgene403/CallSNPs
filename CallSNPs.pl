@@ -18,7 +18,6 @@ my $threads = $config->get("OPTIONS","ManagerThreads");
 my @Groups = $config->getAll("GROUPS");
 my $mchScriptDir = $FindBin::Bin."/Lib/SysCall_1_1/";
 my $mchScript=$mchScriptDir."/SysCall.pl";
-
 for(my $i=0;$i<=$#Groups;$i++){
 	warn "enqueuing $i ($Groups[$i])\n";
 	$q->enqueue($Groups[$i]);
@@ -80,7 +79,11 @@ sub workerThread{
 			warn $command."\n";
 			`$command`;
 			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate,$minCov)};
-			generateMeacham($IndexPath,$baseOutput.".mch.tab",\%H);
+			my $Mres=generateMeacham($IndexPath,$baseOutput.".mch.tab",\%H);
+			if($Mres == 0){
+				warn $grp." did not generate any snps. Leaving files in place...\n";
+				next;
+			}
 			$command = "perl $mchScript $baseOutput.mch.tab $baseOutput.sam $baseOutput $mchScriptDir";
 			warn $command."\n";
 			`$command`;
@@ -156,6 +159,7 @@ sub generateMeacham {
 		my @seq=split(//,$seq);
 		push @output, $H{$pos}{"Chr"}." ".$pos." ".join(" ",@seq);
 	}
+	return 0 unless scalar(@output)>0;
 	Tools->printToFile($out,\@output);
 	return 1;
 }
