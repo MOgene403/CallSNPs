@@ -26,13 +26,15 @@ foreach my $line (@Input){
 	my $out = $line{chr}.",".$line{pos}.",".$line{ref}.",".$line{DP}.",".$tgr.",".$tgnr;
 	my @Q=@{$line{QS}};
 	my @A=@{$line{alt}};
+	my $good=0;
 	for(my$i=1;$i<=$#Q;$i++){
 		if($Q[$i]>=$cut){
+			$good=1;
 			$out.=",".$A[$i-1].",".$Q[$i];
 		}else{
 		}
 	}
-	push @output, $out;
+	push @output, $out if $good==1;
 }
 Tools->printToFile($outF,\@output);
 
