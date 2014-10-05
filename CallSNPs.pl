@@ -35,7 +35,7 @@ while(threads->list()>0){
 sub workerThread{
 	while(my $work=$q->dequeue_nb()){
 		my $grp		= $work;
-		my $DataDir 	= $config->get("DIRECTORIES","Data");
+		my $DataDir 	= $config->get("DIRECTORIES","Filtered");
 		my $TempDir	= $config->get("DIRECTORIES","Temp");
 		my $OutDir  	= $config->get("DIRECTORIES","Output");
 		my $RefDir	= $config->get("DIRECTORIES","References");
@@ -62,20 +62,7 @@ sub workerThread{
 			my $baseOutput = $TempDir."/".$grp."_vs_".$alias;
 			my $finalOutput = $OutDir."/".$grp."_vs_".$alias;
 			$alias =~ s/\..+//;
-			my $command = "$bwa mem -t $workThreads $IndexPath $file1 $file2 > $baseOutput.sam";
-			warn $command."\n";
-			`$command`;
-			$command = "$samtools view -bS $baseOutput.sam > $baseOutput.bam";
-			warn $command."\n";
-			`$command`;
-			$command = "$samtools sort -\@ $workThreads $baseOutput.bam $baseOutput.sorted";
-			warn $command."\n";
-			`$command`;
-			$command = "$samtools index $baseOutput.sorted.bam";
-			warn $command."\n";
-			`$command`;
-			push @GarbageCollector, $baseOutput.".sam";
-			$command = "$samtools mpileup -F 0.00001 -g -C50 -d 10000000 -f $IndexPath $baseOutput.sorted.bam | $bcftools view -b -m 0.01 -p .99 - | $bcftools view - > $baseOutput.raw.vcf";
+			my $command = "$samtools mpileup -F 0.00001 -g -C50 -d 10000000 -f $IndexPath $baseOutput.sorted.bam | $bcftools view -b -m 0.01 -p .99 - | $bcftools view - > $baseOutput.raw.vcf";
 			warn $command."\n";
 			`$command`;
 			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate,$minCov)};

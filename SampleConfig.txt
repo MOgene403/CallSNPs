@@ -19,11 +19,13 @@ bcftools = /Installs/samtools-0.1.19/bcftools/bcftools
 #### Group.orphan.fastq is optional
 #### The value in this pair is a comma-separated list of bwa index references contained in the References directory
 #### The reference value should be a unique identifier up to the first "."
-rk35c4 = RK35HC.fasta,RK35LC.fasta
+Cvx5000c190 = covex5002LC.fasta,covex5002HC.fasta
+Cvx5000c202 = covex5002LC.fasta,covex5002HC.fasta
+Cvx5000c204 = covex5002LC.fasta,covex5002HC.fasta
 
 [DIRECTORIES]
 #Data = /home/ec2-user/Store1/Test_Data
-Data = /home/ec2-user/Store1/Final_Data
+Data = /home/ec2-user/Store1/Data_Final
 References = /home/ec2-user/Store1/References
 Output = /home/ec2-user/Store1/Analysis
 Temp = /home/ec2-user/Store1/Temp
