@@ -2,30 +2,39 @@
 ManagerThreads	= 1
 BWAThreads	= 8
 snpRate		= 0.001
-minCov		=500
+minCov		= 1000
+LengthOf5pTrim = 15
+Min3pQuality = 30
+Min3pLength  = 50
 
 [PATHS]
 bwa = /Installs/bwa
 samtools = /Installs/samtools
 bcftools = /Installs/samtools-0.1.19/bcftools/bcftools
+FivePrimeTrimmer= /home/ec2-user/Store1/Filtering/Lib/TrimFrontFastq.pl
+fastq_quality_trimmer = /Installs/fastx-toolkit/fastq_quality_trimmer
+PairsAndOrphans = /home/ec2-user/Store1/Filtering/Scripts/GetPairsSinglesFastqs.Illumina1.8.pl
 
 [PIPELINE]
-#### No entries here. files will be aligned, converted to bam, sorted, and indexed.
+FivePrimeFilter = 1
+ThreePrimeFilter= 1
+Paired       = 1
+Compressed      = 1
+
+[FILTERING]
+Cvx5000c190=Sample_lane1-index13-AGTCAA-covex5000-190,Sample_lane2-index13-AGTCAA-covex5000-190
+Cvx5000c202=Sample_lane1-index14-AGTTCC-covex5000-202,Sample_lane2-index14-AGTTCC-covex5000-202
+Cvx5000c204=Sample_lane1-index15-ATGTCA-covex5000-204,Sample_lane2-index15-ATGTCA-covex5000-204
 
 [GROUPS]
-##### This is expecting output from the Filtering script. Each Group name must be represented by at least two files:
-#### Group.R1.fastq
-#### Group.R2.fastq
-#### Group.orphan.fastq is optional
-#### The value in this pair is a comma-separated list of bwa index references contained in the References directory
-#### The reference value should be a unique identifier up to the first "."
-Cvx5000c190 = covex5002LC.fasta,covex5002HC.fasta
-Cvx5000c202 = covex5002LC.fasta,covex5002HC.fasta
-Cvx5000c204 = covex5002LC.fasta,covex5002HC.fasta
+Cvx5000c190 = covex5002_all.fasta
+Cvx5000c202 = covex5002_all.fasta
+Cvx5000c204 = covex5002_all.fasta 
+
 
 [DIRECTORIES]
-#Data = /home/ec2-user/Store1/Test_Data
-Data = /home/ec2-user/Store1/Data_Final
+Filtered = /home/ec2-user/Store1/Data_Final
+Data = /home/ec2-user/Store1/Data
 References = /home/ec2-user/Store1/References
 Output = /home/ec2-user/Store1/Analysis
 Temp = /home/ec2-user/Store1/Temp

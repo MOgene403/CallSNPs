@@ -37,7 +37,7 @@ sub workerThread{
 		my $grp		= $work;
 		my $DataDir 	= $config->get("DIRECTORIES","Filtered");
 		my $TempDir	= $config->get("DIRECTORIES","Temp");
-		my $OutDir  	= $config->get("DIRECTORIES","Output");
+		my $OutDir  	= $config->get("DIRECTORIES","Output")."/".$grp;
 		my $RefDir	= $config->get("DIRECTORIES","References");
 		checkDir($DataDir,$TempDir,$OutDir,$RefDir);
 		my $workThreads = $config->get("OPTIONS","BWAThreads");
@@ -59,8 +59,9 @@ sub workerThread{
 		foreach my $index (@Indicies){
 			my $IndexPath=$RefDir."/".$index;
 			my $alias=$index;
-			my $baseOutput = $TempDir."/".$grp."_vs_".$alias;
-			my $finalOutput = $OutDir."/".$grp."_vs_".$alias;
+			my $baseOutput=$OutDir."/$grp.vs.$index.Alignments";
+#			my $baseOutput = $TempDir."/".$grp."_vs_".$alias;
+			my $finalOutput = $OutDir."/".$grp.".vs.".$index;
 			$alias =~ s/\..+//;
 			my $command = "$samtools mpileup -F 0.00001 -g -C50 -d 10000000 -f $IndexPath $baseOutput.sorted.bam | $bcftools view -b -m 0.01 -p .99 - | $bcftools view - > $baseOutput.raw.vcf";
 			warn $command."\n";
