@@ -20,7 +20,7 @@ foreach my $grp (@Groups){
 	foreach my $index (@indicies){
 		my $vcfFile = $OutBase."/".$grp."/$grp.vs.$index.Alignments.raw.vcf";
 		warn "Can't find $vcfFile\n" unless -e $vcfFile;
-		my $outFile = $OutBase."/".$grp."/$grp.byDist.vcf";
+		my $outFile = $OutBase."/".$grp."/$grp.byDist.csv";
 		parseForDistribs($vcfFile,$outFile,$config->get("OPTIONS","snpRate"),$config->get("OPTIONS","minZ"));
 	}
 }
@@ -46,17 +46,17 @@ sub parseForDistribs {
 		my @I16=@{$line{I16}};
 		my $tgr = $I16[0]+$I16[1];
 		my $tgnr= $I16[2]+$I16[3];
-		my $out = $line{chr}.",".$line{pos}.",".$line{ref}.",".$line{DP}.",".$tgr.",".$tgnr;	
 		my @Q=@{$line{QS}};
 		my @A=@{$line{alt}};
 		my $jq=shift @Q;
 		my $rq=shift @Q;
 		my $rb=shift @A;
 		my $pass=0;
-		
+		my $out = $line{chr}.",".$line{pos}.",".$rb.",".$line{DP}.",".$rq.",".$Q[0].",".$A[0];
 		for(my$i=0;$i<=$#Q;$i++){
 			if($Q[$i] >= $Scut){
-				push @output, $line;
+#				push @output, $line;
+		push @output, $out;
 				$main++;
 			}elsif($Q[$i]==0.0){
 			}else{
@@ -80,6 +80,7 @@ sub parseForDistribs {
 	my $hits=0;
 	foreach my $ref (@OC){
 		my %line = %{$ref};
+		my $out = 
 		my @Q = @{$line{QS}};
 		my @A=@{$line{alt}};
 		my $jq=shift @Q;
@@ -91,7 +92,8 @@ sub parseForDistribs {
 			my $Z = ($Q[$i] - $mean)/$stdev;
 			if($Z>$Zcut){
 				#push @output, $line{line}."\t".$Q[$i]."\t".$mean."\t".$stdev."\t".$Z;
-				push @output, $line{line}."\t".$Q[$i]."\t".$mean."\t".$stdev."\t".$Z."\t".$minRat;
+				push @output, $line{chr}.",".$line{pos}.",".$A[0].",".$line{DP}.",".$Q[0].",".$Q[$i].",".$N.",".$Z.",".$minRat;
+#				push @output, $N;
 				$hits++;
 			}
 		}
