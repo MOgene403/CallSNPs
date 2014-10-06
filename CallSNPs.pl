@@ -66,6 +66,7 @@ sub workerThread{
 			my $command = "$samtools mpileup -F 0.00001 -g -C50 -d 10000000 -f $IndexPath $baseOutput.sorted.bam | $bcftools view -b -m 0.01 -p .99 - | $bcftools view - > $baseOutput.raw.vcf";
 			warn $command."\n";
 			`$command`;
+next;
 			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate,$minCov)};
 			push @GarbageCollector, $baseOutput.".filt.vcf";
 			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
