@@ -67,41 +67,15 @@ sub workerThread{
 			warn $command."\n";
 			`$command`;
 			my %H = %{parseResults("$baseOutput.raw.vcf",$baseOutput.".filt.vcf",$snpRate,$minCov)};
-			my $Mres=generateMeacham($IndexPath,$baseOutput.".mch.tab",\%H);
-			if($Mres == 0){
-				warn $grp." did not generate any snps. Leaving files in place...\n";
-				next;
-			}
-			$command = "perl $mchScript $baseOutput.mch.tab $baseOutput.sam $baseOutput $mchScriptDir";
-			warn $command."\n";
-			`$command`;
-			push @GarbageCollector, $baseOutput.".mch.tab";
-			push @GarbageCollector, $baseOutput.".reads_parsed";
-			push @GarbageCollector, $baseOutput.".sys_errors.nn";
-			push @GarbageCollector, $baseOutput.".heterozygous.nn";
-			push @GarbageCollector, $baseOutput.".table_all";
-			push @GarbageCollector, $baseOutput.".table_chosen";
-			push @GarbageCollector, $baseOutput.".table_chosen.n";
-			push @GarbageCollector, $baseOutput.".table_chosen.nn";
 			push @GarbageCollector, $baseOutput.".filt.vcf";
 			push @GarbageCollector, $baseOutput.".fasta.raw.vcf";
-			my %bad=%{getSysErrors($baseOutput)};
-#			my $tmpFinal = $baseOutput.".final.vcf";
-			my $outBad   = $finalOutput.".sysErrors.vcf";			
-			my $outFinal = $finalOutput.".truePos.vcf";
-			my @outFinal;
-			my @outFiltered;
+			my $outFinal = $baseOutput.".final.vcf";
+			my @outFinal;			
 			foreach my $key (keys %H){
 				my $K=$H{$key}{"Chr"}."-".$H{$key}{"Pos"};
-				if(defined($bad{$K})){
-					push @outFiltered, $H{$key}{"L"};
-				}else{
-	#				push @outFinal, parseToFinal($H{$key}{"L"});
-					push @outFinal, $H{$key}{"L"};
-				}
+				push @outFinal, $H{$key}{"L"};
 			}
 			Tools->printToFile($outFinal,\@outFinal);
-			Tools->printToFile($outBad,\@outFiltered);
 		}
 		collectTheGarbage(@GarbageCollector);
 	}
