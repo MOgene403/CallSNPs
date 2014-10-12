@@ -6,6 +6,7 @@ minCov		= 1000
 LengthOf5pTrim = 15
 Min3pQuality = 30
 Min3pLength  = 50
+minZ		=2.33
 
 [PATHS]
 bwa = /Installs/bwa

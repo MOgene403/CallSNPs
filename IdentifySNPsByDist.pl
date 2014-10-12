@@ -39,6 +39,7 @@ sub parseForDistribs {
 	my $main=0;
 	foreach my $line (@Input){
 		next if $line=~m/^\#/;
+		next if $line=~m/INDEL/;
 		my %line=%{parseVCF($line)};
 #Notch_3_HC      1514    .       A       G,T,X   0       .       DP=28329;I16=8212,19947,20,37,1023967,37747939,2006,73002,1404317,70080057,2528,112756,471290,10195328,960,20104;QS=0.998061,0.001880,0.000059,0.000000;VDB=3.929859e-01;RPB=-2.551181e-01      PL      0,255,255,255,255,255,255,255,255,255
 #Notch_3_HC      1587    .       C       T,X     0       .       DP=14643;I16=1934,12587,3,15,540693,20391583,623,22221,698795,34197409,802,35920,230168,4534778,265,5131;QS=0.998836,0.001164,0.000000,0.000000;VDB=1.619116e-01;RPB=1.177923e+00       PL      0,255,255,255,255,255
@@ -48,15 +49,24 @@ sub parseForDistribs {
 		my $tgnr= $I16[2]+$I16[3];
 		my @Q=@{$line{QS}};
 		my @A=@{$line{alt}};
-		my $jq=shift @Q;
-		my $rq=shift @Q;
-		my $rb=shift @A;
 		my $pass=0;
-		my $out = $line{chr}.",".$line{pos}.",".$rb.",".$line{DP}.",".$rq.",".$Q[0].",".$A[0];
-		for(my$i=0;$i<=$#Q;$i++){
+		my $out = $line{chr};
+		$out.=",".$line{pos};
+		$out.=",".$line{ref};
+		$out.=",".$line{DP};
+		$out.=",".$I16[0];
+		$out.=",".$I16[1];
+		$out.=",".$Q[0];
+		for(my$i=1;$i<=$#Q;$i++){
 			if($Q[$i] >= $Scut){
+				warn $line."\n" unless defined $A[$i];
 #				push @output, $line;
-		push @output, $out;
+				next if $A[$i] eq "X";
+				$out.=",".$A[$i];
+				$out.=",".$I16[2];
+				$out.=",".$I16[3];
+				$out.=",".$Q[$i];
+				push @output, $out;
 				$main++;
 			}elsif($Q[$i]==0.0){
 			}else{
@@ -83,16 +93,19 @@ sub parseForDistribs {
 		my $out = 
 		my @Q = @{$line{QS}};
 		my @A=@{$line{alt}};
-		my $jq=shift @Q;
+		my @I16=@{$line{I16}};
 		for(my$i=0;$i<=$#Q;$i++){
 			next if $Q[$i] >= $Scut;
 			next if $Q[$i] == 0;
 			my $minRat =  getQRatios($Scut,\@Q);
 			my $N = $A[$i];
 			my $Z = ($Q[$i] - $mean)/$stdev;
+#			print "$Q[$i] $mean $stdev equals $Z\n"; 
 			if($Z>$Zcut){
 				#push @output, $line{line}."\t".$Q[$i]."\t".$mean."\t".$stdev."\t".$Z;
-				push @output, $line{chr}.",".$line{pos}.",".$A[0].",".$line{DP}.",".$Q[0].",".$Q[$i].",".$N.",".$Z.",".$minRat;
+				## ALTERNATIVE Q 1 Q2 etc
+			next if $N eq "X";
+				push @output, $line{chr}.",".$line{pos}.",".$line{ref}.",".$line{DP}.",".$I16[0].",".$I16[1].",".$Q[0].",".$N.",".$I16[2].",".$I16[3].",".$Q[$i].",".$Z.",".$minRat;
 #				push @output, $N;
 				$hits++;
 			}
@@ -113,6 +126,7 @@ sub parseForDistribs {
 #		}
 #	}
 	warn "$main locations exceeded base SNP call rate, $hits exceeded one-tail-Z>=2.33 (p<0.01)\n";
+	warn "printing results to $outFile\n";
 	Tools->printToFile($outFile,\@output);
 }
 
@@ -142,7 +156,15 @@ sub parseVCF {
 	$line{pos}=$line[1];
 	$line{ref}=$line[3];
 	$line{line}=$line;
-	$line{alt}=[ split(/\,/,$line[4]) ];
+#Notch3LC        888     .       T       A,C,X   0       .       DP=7091;I16=1098,5973,0,2,270195,10431055,35,617,299853,14097665,100,5000,25081,194313,3,5;QS=0.999854,0.000079,0.000067,0.000000;VDB=7.840000e-02;RPB=1.093222e+00    PL      0,255,255,255,255,255,255,255,255,255
+#Notch3LC        889     .       A       C,X     0       .       DP=6870;I16=1062,5778,0,1,223630,7461316,13,169,288790,13556532,50,2500,18156,150320,0,0;QS=0.999933,0.000067,0.000000,0.000000;RPB=1.731544e+00       PL      0,255,255,255,255,255
+#Notch3LC        890     .       A       G,X     0       .       DP=3363;I16=1012,2333,1,1,120111,4373929,41,953,117909,5120699,97,4709,14818,117412,2,4;QS=0.999554,0.000446,0.000000,0.000000;VDB=7.680000e-02;RPB=1.522834e+00       PL      0,255,255,255,255,255
+	if($line[4] eq "X"){
+		my @a = ("X");
+		$line{alt}=\@a;
+	}else{
+		$line{alt}=[ split(/\,/,$line[4]) ];
+	}
 	my %info=%{parseInfo($line[7])};
 	$line{DP}=$info{"DP"};
 	$line{I16}=$info{"I16"};
