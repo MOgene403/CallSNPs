@@ -35,7 +35,7 @@ while(threads->list()>0){
 sub workerThread{
 	while(my $work=$q->dequeue_nb()){
 		my $grp		= $work;
-		my $DataDir 	= $config->get("DIRECTORIES","Filtered");
+		my $DataDir 	= $config->get("DIRECTORIES","Output")."/".$grp;
 		my $TempDir	= $config->get("DIRECTORIES","Temp");
 		my $OutDir  	= $config->get("DIRECTORIES","Output")."/".$grp;
 		my $RefDir	= $config->get("DIRECTORIES","References");

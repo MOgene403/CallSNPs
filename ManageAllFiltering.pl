@@ -35,7 +35,8 @@ sub workerThread{
 	while(my $work=$q->dequeue_nb()){
 		my $grp=$work;
 		my $DataDir = $config->get("DIRECTORIES","Data");
-		my $OutDir  = $config->get("DIRECTORIES","Filtered");
+		my $OutDir  = $config->get("DIRECTORIES","Output")."/".$grp;
+		mkdir $OutDir unless -e $OutDir;
 		my @SubDirs = split(",",$config->get("FILTERING",$grp));
 		my $workThreads = $config->get("OPTIONS","workThreads");
 		my @CurrentSourcePaths;

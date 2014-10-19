@@ -40,8 +40,8 @@ sub worker {
 	my $TID=threads->tid() -1 ;
 	while(my$j=$q->dequeue_nb()){
 		my @Refs=split(/\,/,$Config->get("GROUPS",$j));
-		my $P1=$Config->get("DIRECTORIES","Filtered")."/".$j.".R1.fastq";
-		my $P2=$Config->get("DIRECTORIES","Filtered")."/".$j.".R2.fastq";
+		my $P1=$Config->get("DIRECTORIES","Output")."/$j/".$j.".R1.fastq";
+		my $P2=$Config->get("DIRECTORIES","Output")."/$j/".$j.".R2.fastq";
 		
 		my $outputDir = $Config->get("DIRECTORIES","Output")."/".$j;
 		mkdir $outputDir unless -e $outputDir;

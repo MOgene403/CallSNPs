@@ -48,6 +48,7 @@ sub parseForDistribs {
 		my $tgr = $I16[0]+$I16[1];
 		my $tgnr= $I16[2]+$I16[3];
 		my @Q=@{$line{QS}};
+		my $rq  = shift @Q;
 		my @A=@{$line{alt}};
 		my $pass=0;
 		my $out = $line{chr};
@@ -56,12 +57,13 @@ sub parseForDistribs {
 		$out.=",".$line{DP};
 		$out.=",".$I16[0];
 		$out.=",".$I16[1];
-		$out.=",".$Q[0];
-		for(my$i=1;$i<=$#Q;$i++){
+		$out.=",".$rq;
+		for(my$i=0;$i<=$#Q;$i++){
 			if($Q[$i] >= $Scut){
 				warn $line."\n" unless defined $A[$i];
 #				push @output, $line;
-				next if $A[$i] eq "X";
+				#next if $A[$i] eq "X";
+				#warn $line if $line{pos} == 206;
 				$out.=",".$A[$i];
 				$out.=",".$I16[2];
 				$out.=",".$I16[3];
@@ -92,6 +94,7 @@ sub parseForDistribs {
 		my %line = %{$ref};
 		my $out = 
 		my @Q = @{$line{QS}};
+		my $rq = shift @Q;
 		my @A=@{$line{alt}};
 		my @I16=@{$line{I16}};
 		for(my$i=0;$i<=$#Q;$i++){
