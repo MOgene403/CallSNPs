@@ -12,9 +12,10 @@ minZ		=2.33
 bwa = /Installs/bwa
 samtools = /Installs/samtools
 bcftools = /Installs/samtools-0.1.19/bcftools/bcftools
-FivePrimeTrimmer= /home/ec2-user/Store1/Filtering/Lib/TrimFrontFastq.pl
+FivePrimeTrimmer= TrimFrontFastq.pl
 fastq_quality_trimmer = /Installs/fastx-toolkit/fastq_quality_trimmer
-PairsAndOrphans = /home/ec2-user/Store1/Filtering/Scripts/GetPairsSinglesFastqs.Illumina1.8.pl
+PairsAndOrphans = GetPairsSinglesFastqs.Illumina1.8.pl
+Parser		=  ParseVCFs.toOut.pl
 
 [PIPELINE]
 FivePrimeFilter = 1
@@ -23,14 +24,16 @@ Paired       = 1
 Compressed      = 1
 
 [FILTERING]
-Cvx5000c190=Sample_lane1-index13-AGTCAA-covex5000-190,Sample_lane2-index13-AGTCAA-covex5000-190
-Cvx5000c202=Sample_lane1-index14-AGTTCC-covex5000-202,Sample_lane2-index14-AGTTCC-covex5000-202
-Cvx5000c204=Sample_lane1-index15-ATGTCA-covex5000-204,Sample_lane2-index15-ATGTCA-covex5000-204
+FGF21-Clone-1-sample-1_1 = FGF21-Clone-1-sample-1_S5_L001_R1_001,FGF21-Clone-1-sample-1_S5_L001_R2_001,FGF21-Clone-1-sample-1_S5_L002_R1_001,FGF21-Clone-1-sample-1_S5_L002_R2_001,FGF21-Clone-1-sample-1_S5_L003_R1_001,FGF21-Clone-1-sample-1_S5_L003_R2_001,FGF21-Clone-1-sample-1_S5_L004_R1_001,FGF21-Clone-1-sample-1_S5_L004_R2_001
+FGF21-Clone-1-sample-2_1 = FGF21-Clone-1-sample-2_S6_L001_R1_001,FGF21-Clone-1-sample-2_S6_L001_R2_001,FGF21-Clone-1-sample-2_S6_L002_R1_001,FGF21-Clone-1-sample-2_S6_L002_R2_001,FGF21-Clone-1-sample-2_S6_L003_R1_001,FGF21-Clone-1-sample-2_S6_L003_R2_001,FGF21-Clone-1-sample-2_S6_L004_R1_001,FGF21-Clone-1-sample-2_S6_L004_R2_001
+FGF21-Clone-2-sample-1_1 = FGF21-Clone-2-sample-1_S7_L001_R1_001,FGF21-Clone-2-sample-1_S7_L001_R2_001,FGF21-Clone-2-sample-1_S7_L002_R1_001,FGF21-Clone-2-sample-1_S7_L002_R2_001,FGF21-Clone-2-sample-1_S7_L003_R1_001,FGF21-Clone-2-sample-1_S7_L003_R2_001,FGF21-Clone-2-sample-1_S7_L004_R1_001,FGF21-Clone-2-sample-1_S7_L004_R2_001
+FGF21-Clone-2-sample-2_1 = FGF21-Clone-2-sample-2_S8_L001_R1_001,FGF21-Clone-2-sample-2_S8_L001_R2_001,FGF21-Clone-2-sample-2_S8_L002_R1_001,FGF21-Clone-2-sample-2_S8_L002_R2_001,FGF21-Clone-2-sample-2_S8_L003_R1_001,FGF21-Clone-2-sample-2_S8_L003_R2_001,FGF21-Clone-2-sample-2_S8_L004_R1_001,FGF21-Clone-2-sample-2_S8_L004_R2_001
 
 [GROUPS]
-Cvx5000c190 = covex5002_all.fasta
-Cvx5000c202 = covex5002_all.fasta
-Cvx5000c204 = covex5002_all.fasta 
+FGF21-Clone-1-sample-1_1 = fgf21_all.fasta
+FGF21-Clone-1-sample-2_1 = fgf21_all.fasta
+FGF21-Clone-2-sample-1_1 = fgf21_all.fasta
+FGF21-Clone-2-sample-2_1 = fgf21_all.fasta
 
 
 [DIRECTORIES]
