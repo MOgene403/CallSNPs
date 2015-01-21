@@ -20,7 +20,8 @@ foreach my $grp (@Groups){
 	foreach my $index (@indicies){
 		my $vcfFile = $OutBase."/".$grp."/$grp.vs.$index.Alignments.raw.vcf";
 		warn "Can't find $vcfFile\n" unless -e $vcfFile;
-		my $outFile = $OutBase."/".$grp."/$grp.byDist.csv";
+		#my $outFile = $OutBase."/".$grp."/$grp.byDist.csv";
+		my $outFile = $OutBase."/".$grp.".byDist.csv";
 		parseForDistribs($vcfFile,$outFile,$config->get("OPTIONS","snpRate"),$config->get("OPTIONS","minZ"));
 	}
 }
@@ -51,37 +52,13 @@ sub parseForDistribs {
 		my $rq  = shift @Q;
 		my @A=@{$line{alt}};
 		my $pass=0;
-		my $out = $line{chr};
-		$out.=",".$line{pos};
-		$out.=",".$line{ref};
-		$out.=",".$line{DP};
-		$out.=",".$I16[0];
-		$out.=",".$I16[1];
-		$out.=",".$rq;
 		for(my$i=0;$i<=$#Q;$i++){
 			if($Q[$i] >= $Scut){
-				warn $line."\n" unless defined $A[$i];
-#				push @output, $line;
-				#next if $A[$i] eq "X";
-				#warn $line if $line{pos} == 206;
-				$out.=",".$A[$i];
-				$out.=",".$I16[2];
-				$out.=",".$I16[3];
-				$out.=",".$Q[$i];
-				push @output, $out;
 				$main++;
 			}elsif($Q[$i]==0.0){
 			}else{
-				my $minRat = getQRatios($Scut,\@Q);
-#				warn $minRat."\n".$line."\n";
-				my @OD;
-				push @OD, $line{pos};
-				push @OD, $A[$i];
-				push @OD, $Q[$i];
 				push @insertfreqs, $Q[$i];
-				push @OC, \%line;
-				push @OL, \@OD;
-				last;
+				#last;
 			}
 		}
 	}
@@ -90,44 +67,46 @@ sub parseForDistribs {
 	print "mean: $mean\n";
 	print "stdev: $stdev\n";
 	my $hits=0;
-	foreach my $ref (@OC){
-		my %line = %{$ref};
-		my $out = 
+	foreach my $line (@Input){
+		next if $line=~m/^\#/;
+		next if $line=~m/INDEL/;
+		my %line=%{parseVCF($line)};
 		my @Q = @{$line{QS}};
 		my $rq = shift @Q;
 		my @A=@{$line{alt}};
 		my @I16=@{$line{I16}};
 		for(my$i=0;$i<=$#Q;$i++){
-			next if $Q[$i] >= $Scut;
-			next if $Q[$i] == 0;
-			my $minRat =  getQRatios($Scut,\@Q);
-			my $N = $A[$i];
-			my $Z = ($Q[$i] - $mean)/$stdev;
-#			print "$Q[$i] $mean $stdev equals $Z\n"; 
-			if($Z>$Zcut){
-				#push @output, $line{line}."\t".$Q[$i]."\t".$mean."\t".$stdev."\t".$Z;
-				## ALTERNATIVE Q 1 Q2 etc
-			next if $N eq "X";
-				push @output, $line{chr}.",".$line{pos}.",".$line{ref}.",".$line{DP}.",".$I16[0].",".$I16[1].",".$Q[0].",".$N.",".$I16[2].",".$I16[3].",".$Q[$i].",".$Z.",".$minRat;
-#				push @output, $N;
-				$hits++;
+			my $out = $line{chr};
+			$out.=",".$line{pos};
+			$out.=",".$line{ref};
+			$out.=",".$line{DP};
+			$out.=",".$I16[0];
+			$out.=",".$I16[1];
+			$out.=",".$rq;
+			if($Q[$i] >= $Scut){
+				$out.=",".$A[$i];
+				$out.=",".$I16[2];
+				$out.=",".$I16[3];
+				$out.=",".$Q[$i];
+				push @output, $out;
+			}elsif($Q[$i]==0.0){
+			}else{
+				my $minRat =  getQRatios($Scut,\@Q);
+				my $Z = ($Q[$i] - $mean)/$stdev;
+				if($Z>$Zcut){
+					next if $A[$i] eq "X";
+					$out.=",".$A[$i];
+					$out.=",".$I16[2];
+					$out.=",".$I16[3];
+					$out.=",".$Q[$i];
+					$out.=",".$Z;
+					$out.=",".$minRat;
+					push @output, $out;
+					$hits++;
+				}
 			}
 		}
 	}
-#	for(my$r=0;$r<=$#OL;$r++){
-	# proc candidate non-zero variance locations
-#		my @D = @{$OL[$r]};
-#		my $pos = shift @D;
-#		for(my$i=0;$i<=$#D-1;$i+=2){
-#			my $N = $D[$i];
-#			my $Q = $D[$i+1];
-#			my $Z = ($Q-$mean)/$stdev;
-#			if($Z>$Zcut){
-#				push @output, $OC[$r]."\t".$Q."\t".$mean."\t".$stdev."\t".$Z;
-#				$hits++;
-#			}
-#		}
-#	}
 	warn "$main locations exceeded base SNP call rate, $hits exceeded one-tail-Z>=2.33 (p<0.01)\n";
 	warn "printing results to $outFile\n";
 	Tools->printToFile($outFile,\@output);
