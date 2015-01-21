@@ -34,6 +34,8 @@ sub parseForDistribs {
 	my @Input = @{Tools->LoadFile($in_File)};
 	my @insertfreqs;
 	my @output;
+	my $header = "RefID,Position,ref. NT,Total Depth,Ref NT F Coverage,Ref NT R Coverage,Ref NT QS,Alt NT,Alt NT F Cov,Alt NT R Cov,Alt NT QS,Z-score,Fold Change over min non-zero QS";
+	push @output, $header;
 	my @OL;
 	my @OC;
 	warn $in_File."\n";
