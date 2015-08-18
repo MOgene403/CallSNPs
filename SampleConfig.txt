@@ -1,7 +1,8 @@
 [OPTIONS]
 ManagerThreads	= 1
 BWAThreads	= 8
-snpRate		= 0.001
+#snpRate		= 0.001
+snpRate		= 1.000
 minCov		= 1000
 LengthOf5pTrim = 15
 Min3pQuality = 30
@@ -24,21 +25,39 @@ Paired       = 1
 Compressed      = 1
 
 [FILTERING]
-FGF21-Clone-1-sample-1_1 = FGF21-Clone-1-sample-1_S5_L001_R1_001,FGF21-Clone-1-sample-1_S5_L001_R2_001,FGF21-Clone-1-sample-1_S5_L002_R1_001,FGF21-Clone-1-sample-1_S5_L002_R2_001,FGF21-Clone-1-sample-1_S5_L003_R1_001,FGF21-Clone-1-sample-1_S5_L003_R2_001,FGF21-Clone-1-sample-1_S5_L004_R1_001,FGF21-Clone-1-sample-1_S5_L004_R2_001
-FGF21-Clone-1-sample-2_1 = FGF21-Clone-1-sample-2_S6_L001_R1_001,FGF21-Clone-1-sample-2_S6_L001_R2_001,FGF21-Clone-1-sample-2_S6_L002_R1_001,FGF21-Clone-1-sample-2_S6_L002_R2_001,FGF21-Clone-1-sample-2_S6_L003_R1_001,FGF21-Clone-1-sample-2_S6_L003_R2_001,FGF21-Clone-1-sample-2_S6_L004_R1_001,FGF21-Clone-1-sample-2_S6_L004_R2_001
-FGF21-Clone-2-sample-1_1 = FGF21-Clone-2-sample-1_S7_L001_R1_001,FGF21-Clone-2-sample-1_S7_L001_R2_001,FGF21-Clone-2-sample-1_S7_L002_R1_001,FGF21-Clone-2-sample-1_S7_L002_R2_001,FGF21-Clone-2-sample-1_S7_L003_R1_001,FGF21-Clone-2-sample-1_S7_L003_R2_001,FGF21-Clone-2-sample-1_S7_L004_R1_001,FGF21-Clone-2-sample-1_S7_L004_R2_001
-FGF21-Clone-2-sample-2_1 = FGF21-Clone-2-sample-2_S8_L001_R1_001,FGF21-Clone-2-sample-2_S8_L001_R2_001,FGF21-Clone-2-sample-2_S8_L002_R1_001,FGF21-Clone-2-sample-2_S8_L002_R2_001,FGF21-Clone-2-sample-2_S8_L003_R1_001,FGF21-Clone-2-sample-2_S8_L003_R2_001,FGF21-Clone-2-sample-2_S8_L004_R1_001,FGF21-Clone-2-sample-2_S8_L004_R2_001
+PF06717024_155_A4C11_sample-1 = 1A_S1_R1_001,1A_S1_R2_001
+PF06717024_155_A4C11_sample-2 = 1B_S2_R1_001,1B_S2_R2_001
+PF06717024_155_C4D3_sample-1 = 2A_S3_R1_001,2A_S3_R2_001
+PF06717024_155_C4D3_sample-2 = 2B_S4_R1_001,2B_S4_R2_001
+PF06717024_155_A5G4_sample-1 = 3A_S5_R1_001,3A_S5_R2_001
+PF06717024_155_A5G4_sample-2 = 3B_S6_R1_001,3B_S6_R2_001
+PF06717025_156_B4B10_sample-1 = 6A_S7_R1_001,6A_S7_R2_001
+PF06717025_156_B4B10_sample-2 = 6B_S8_R1_001,6B_S8_R2_001
+Notch1 = Notch-1_S9_R1_001,Notch-1_S9_R2_001
+PF155LC_DNA = PF155LC_S10_R1_001,PF155LC_S10_R2_001
+PF155HC_DNA = PF155HC_S11_R1_001,PF155HC_S11_R2_001
+PF156LC_DNA = PF156LC_S12_R1_001,PF156LC_S12_R2_001
+PF156HC_DNA = PF156HC_S13_R1_001,PF156HC_S13_R2_001
 
 [GROUPS]
-FGF21-Clone-1-sample-1_1 = fgf21_all.fasta
-FGF21-Clone-1-sample-2_1 = fgf21_all.fasta
-FGF21-Clone-2-sample-1_1 = fgf21_all.fasta
-FGF21-Clone-2-sample-2_1 = fgf21_all.fasta
+PF06717024_155_A4C11_sample-1 = 155_all.fasta
+PF06717024_155_A4C11_sample-2 = 155_all.fasta
+PF06717024_155_C4D3_sample-1 = 155_all.fasta
+PF06717024_155_C4D3_sample-2 = 155_all.fasta
+PF06717024_155_A5G4_sample-1 = 155_all.fasta
+PF06717024_155_A5G4_sample-2 = 155_all.fasta
+PF06717025_156_B4B10_sample-1 = 156_all.fasta
+PF06717025_156_B4B10_sample-2 = 156_all.fasta
+Notch1 = notch3_all.fasta
+PF155LC_DNA = 155_LC.fasta
+PF155HC_DNA = 155_HC.fasta
+PF156LC_DNA = 156_LC.fasta
+PF156HC_DNA = 156_HC.fasta
 
 
 [DIRECTORIES]
-Filtered = /home/ec2-user/Store1/Data_Final
-Data = /home/ec2-user/Store1/Data
-References = /home/ec2-user/Store1/References
-Output = /home/ec2-user/Store1/Analysis
-Temp = /home/ec2-user/Store1/Temp
+Filtered = /home/ec2-user/Store2/Data_Final
+Data = /home/ec2-user/Store2/Data
+References = /home/ec2-user/Store2/References
+Output = /home/ec2-user/Store2/Analysis
+Temp = /home/ec2-user/Store2/Temp
